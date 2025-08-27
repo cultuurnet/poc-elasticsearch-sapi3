@@ -129,12 +129,14 @@ final class SearchCommand extends Command
             'index' => $index,
             'body' => [
                 'size' => 10000,
-                'bool' => [
-                    'must' => [
-                        ['query_string' => ['query' => $query]],
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            ['query_string' => ['query' => $query]],
+                        ],
+                        'filter' => [],
                     ],
-                    'filter' => [],
-                ],
+                ]
             ],
         ];
     }
