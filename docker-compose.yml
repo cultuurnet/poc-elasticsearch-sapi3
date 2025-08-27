@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+    container_name: poc-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  php:
+    image: php:8.1-cli
+    container_name: poc-elasticsearch-php
+    volumes:
+      - ./:/app
+    working_dir: /app/symfony
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - COMPOSER_HOME=/tmp
+    command: php -a
+    tty: true
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - elasticsearch
+
+  # Optional: Kibana for GUI inspection
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.0
+    container_name: poc-elasticsearch-kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+volumes:
+  esdata:

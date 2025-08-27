@@ -1,0 +1,24 @@
+{
+    "index": "offers",
+    "body": {
+        "size": 10000,
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "query": "cultuur"
+                        }
+                    }
+                ],
+                "filter": {
+                    "range": {
+                        "availableFrom": {
+                            "lt": "2025-01-01T00:00:00Z"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
