@@ -13,6 +13,3 @@ RUN curl -sS https://getcomposer.org/installer | php && \
 # Install Symfony CLI
 RUN curl -sS https://get.symfony.com/cli/installer | bash && \
     mv /root/.symfony*/bin/symfony /usr/local/bin/symfony
-
-# install xdebug
-RUN pecl install xdebug-3.1.5 && docker-php-ext-enable xdebug
